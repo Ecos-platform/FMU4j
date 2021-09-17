@@ -1,24 +1,54 @@
 
 apply plugin: "com.jfrog.artifactory"
+apply plugin: "maven-publish"
 
-artifactory {
-    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
-    publish {
-        repository {
-            repoKey = 'ais-gradle-dev-local'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-            maven = true
+task sourceJar(type: Jar) {
+    classifier 'sources'
+    from sourceSets.main.allJava
+}
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+
+            from project.components.java
+            artifact sourceJar
+
+            pom {
+                name = "FMU4j"
+                description = "A framework for enabling FMU creation on the JVM"
+                url = 'https://github.com/markaren/fmu4j'
+
+                scm {
+                    url = 'https://github.com/markaren/fmu4j/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name = 'The MIT License'
+                        url = 'https://opensource.org/licenses/mit-license.php'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'laht'
+                        name = 'Lars Ivar Hatledal'
+                        email = 'laht@ntnu.com'
+                    }
+                }
+            }
         }
     }
-    resolve {
-        repository {
-            repoKey = 'ais-gradle-dev'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-            maven = true
-
-        }
-    }
+//    repositories {
+//        maven {
+//            def releasesRepoUrl = "https://ais.jfrog.io/artifactory/ais-gradle-dev"
+//            def snapshotsRepoUrl = "https://ais.jfrog.io/artifactory/ais-gradle-release"
+//            url project.version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+//            credentials {
+//                username = project.artifactory_user
+//                password = project.artifactory_password
+//            }
+//        }
+//    }
 }
