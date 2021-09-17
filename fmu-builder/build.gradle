@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
+
+apply from: rootProject.file("gradle/junit.gradle")
+apply from: rootProject.file("gradle/jfrog.gradle")
+
+dependencies {
+
+    implementation group: 'info.picocli', name: 'picocli', version: '4.5.0'
+
+    testImplementation group: 'info.laht.fmi4j', name: 'fmi-import', version: '0.37.2'
+
+}
+
+test.dependsOn ':fmu-slaves:shadowJar'

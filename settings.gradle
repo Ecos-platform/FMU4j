@@ -1,0 +1,18 @@
+rootProject.name = 'fmu4j'
+
+buildscript {
+    repositories {
+        jcenter()
+
+    }
+    dependencies {
+        //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+    }
+}
+
+include "fmi-export"
+include "fmi-native-export"
+include "fmu-builder"
+include "fmu-builder-app"
+include "fmu-slaves"
