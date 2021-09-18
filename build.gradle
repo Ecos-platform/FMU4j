@@ -3,17 +3,16 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "1.5.10" apply false
 }
 
-group 'no.ntnu.ais.fmu4j'
-version '1.0-SNAPSHOT'
-
 println "Gradle version is ${gradle.getGradleVersion()}"
-version = rootProject.file("VERSION").readLines()[0]
-println("Building ${rootProject.name} v$version")
 
 wrapper {
     gradleVersion = '7.2'
     distributionType = Wrapper.DistributionType.ALL
 }
+
+group 'no.ntnu.ais.fmu4j'
+version = rootProject.file("VERSION").readLines()[0]
+println("Building ${rootProject.name} v$version")
 
 subprojects { sub ->
 
