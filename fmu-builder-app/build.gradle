@@ -1,13 +1,13 @@
 plugins {
     id 'java'
     id 'application'
-    id "com.github.johnrengelman.shadow" version "4.0.4"
+    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
 mainClassName = "no.ntnu.ais.fmu4j.FmuBuilder"
 
 dependencies {
-    project(':fmu-builder')
+    implementation project(':fmu-builder')
 }
 
 shadowJar {
