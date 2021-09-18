@@ -4,7 +4,6 @@ plugins {
 }
 
 apply from: rootProject.file("gradle/junit.gradle")
-apply from: rootProject.file("gradle/jfrog.gradle")
 
 dependencies {
 
