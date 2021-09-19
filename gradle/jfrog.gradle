@@ -46,7 +46,7 @@ def releasesRepoKey = "ais-gradle-release-local"
 def snapshotsRepoKey = "ais-gradle-dev-local"
 
 artifactory {
-    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+    contextUrl = "https://ais.jfrog.io/artifactory"   //The base Artifactory URL if not overridden by the publisher/resolver
     publish {
         repository {
             repoKey = project.version.endsWith('SNAPSHOT') ? snapshotsRepoKey : releasesRepoKey
