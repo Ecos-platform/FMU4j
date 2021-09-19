@@ -3,6 +3,25 @@
 FMU4j is a software package for the JVM that enables
 export of FMI 2.0 for Co-simulation.
 
+#### JFrog artifactory
+
+Artifacts are available through JFrog artifactory.
+
+```groovy
+repositories {
+    maven { url "https://ais.jfrog.io/artifactory/ais-gradle-dev-local/"} // SNAPSHOTS
+    maven { url "https://ais.jfrog.io/artifactory/ais-gradle-release-local/"} // STABLE
+}
+
+dependencies {
+    def fmu4j_version = "..."
+    implementation "no.ntnu.ais.fmu4j:fmi-export:$version" // FMI skeleton
+    implementation "no.ntnu.ais.fmu4j:fmi-builder:$version" // FMU generation from code
+}
+
+
+```
+
 
 ###### Write the code
 
@@ -48,13 +67,23 @@ public class JavaSlave extends Fmi2Slave {
 ```
 Usage: fmu-builder [-h] [-d=<destFile>] -f=<jarFile> -m=<mainClass>
   -d, --dest=<destFile>    Where to save the FMU.
-  -f, --file=<jarFile>     Path to the Jar.
+  -f, --file=<jarFile>     Path to the Jar (must contain all dependencies).
   -h, --help               Print this message and quits.
   -m, --main=<mainClass>   Fully qualified name of the main class.
 ```
 
 In order to build the `fmu-builder` tool, clone this repository and invoke `./gradlew installDist`.
 The distribution will be located in the folder _fmu-builder-app/build/install_.
+
+Note that the produced Jar file must be a fatJar/shadowJar.
+
+```groovy
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+```
 
 *** 
 
