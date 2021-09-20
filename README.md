@@ -1,7 +1,7 @@
 ### FMU4j
 
 FMU4j is a software package for the JVM that enables
-export of FMI 2.0 for Co-simulation.
+export of models compatiable with FMI 2.0 for Co-simulation.
 
 #### JFrog artifactory
 
@@ -67,7 +67,7 @@ public class JavaSlave extends Fmi2Slave {
 ```
 Usage: fmu-builder [-h] [-d=<destFile>] -f=<jarFile> -m=<mainClass>
   -d, --dest=<destFile>    Where to save the FMU.
-  -f, --file=<jarFile>     Path to the Jar (must contain all dependencies).
+  -f, --file=<jarFile>     Path to the Jar.
   -h, --help               Print this message and quits.
   -m, --main=<mainClass>   Fully qualified name of the main class.
 ```
