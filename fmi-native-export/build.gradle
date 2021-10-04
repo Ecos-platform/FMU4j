@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
 def os = OperatingSystem.current()
-def buildDir = new File("build")
+def buildDir = new File(projectDir, "build")
 buildDir.mkdir()
 
 task configureNative {
