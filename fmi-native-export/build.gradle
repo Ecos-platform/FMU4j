@@ -2,10 +2,12 @@ import org.gradle.internal.os.OperatingSystem
 
 def os = OperatingSystem.current()
 def buildDir = new File(projectDir, "build")
-buildDir.mkdir()
 
 task configureNative {
     doLast {
+        if (!buildDir.exists()) {
+            buildDir.mkdir()
+        }
         exec {
             workingDir buildDir
             if (os.isWindows()) {
