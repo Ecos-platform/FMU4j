@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
 def os = OperatingSystem.current()
-def buildDir = new File("cmake-build-release")
+def buildDir = new File("build")
 buildDir.mkdir()
 
 task configureNative {
@@ -25,6 +25,15 @@ task buildNative {
                 commandLine 'cmd', '/c', 'cmake', '--build', '.', '--config', 'Release'
             } else if (os.linux) {
                 commandLine 'cmake', '--build', '.'
+            }
+        }
+        copy {
+
+            from "$buildDir/bin"
+            if (os.isWindows()) {
+                into "${rootProject.file("fmu-builder/src/main/resources/binaries/win64")}"
+            } else if (os.isLinux()) {
+                into "${rootProject.file("fmu-builder/src/main/resources/binaries/linux64")}"
             }
         }
     }
