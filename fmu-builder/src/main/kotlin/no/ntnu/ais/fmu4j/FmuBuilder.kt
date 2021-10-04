@@ -105,15 +105,7 @@ class FmuBuilder(
 
             zos.putNextEntry(ZipEntry("binaries/"))
 
-            FmuBuilder::class.java.classLoader.getResourceAsStream("binaries/win32/fmi4j-export.dll")?.use { `is` ->
-                zos.putNextEntry(ZipEntry("binaries/win32/"))
-                zos.putNextEntry(ZipEntry("binaries/win32/$modelIdentifier.dll"))
-                zos.write(`is`.readBytes())
-                zos.closeEntry()
-                zos.closeEntry()
-            }
-
-            FmuBuilder::class.java.classLoader.getResourceAsStream("binaries/win64/fmi4j-export.dll")?.buffered()?.use { `is` ->
+            FmuBuilder::class.java.classLoader.getResourceAsStream("binaries/win64/fmu4j.dll")?.buffered()?.use { `is` ->
                 zos.putNextEntry(ZipEntry("binaries/win64/"))
                 zos.putNextEntry(ZipEntry("binaries/win64/$modelIdentifier.dll"))
                 zos.write(`is`.readBytes())
@@ -121,7 +113,7 @@ class FmuBuilder(
                 zos.closeEntry()
             }
 
-            FmuBuilder::class.java.classLoader.getResourceAsStream("binaries/linux64/libfmi4j-export.so")?.buffered()?.use { `is` ->
+            FmuBuilder::class.java.classLoader.getResourceAsStream("binaries/linux64/libfmu4j.so")?.buffered()?.use { `is` ->
                 zos.putNextEntry(ZipEntry("binaries/linux64/"))
                 zos.putNextEntry(ZipEntry("binaries/linux64/$modelIdentifier.so"))
                 zos.write(`is`.readBytes())

@@ -414,7 +414,7 @@ abstract class Fmi2Slave(
     fun __define__() {
 
         modelDescription.fmiVersion = "2.0"
-        modelDescription.generationTool = "FMI4j"
+        modelDescription.generationTool = "FMU4j"
         modelDescription.variableNamingConvention = "structured"
         modelDescription.guid = UUID.randomUUID().toString()
         modelDescription.generationDateAndTime = getDateAndTime()
