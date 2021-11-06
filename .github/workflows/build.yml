@@ -87,7 +87,6 @@ jobs:
       - name: Setup PATH on Windows
         if: startsWith(runner.os, 'Windows')
         run: |
-          where jvm.dll
           echo "${{env.JAVA_HOME}}/jre/bin" >> $GITHUB_PATH
           echo "${{env.JAVA_HOME}}/jre/bin/server" >> $GITHUB_PATH
           echo "${{env.JAVA_HOME}}/lib/jvm" >> $GITHUB_PATH
