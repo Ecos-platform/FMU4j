@@ -87,6 +87,7 @@ jobs:
       - name: Setup PATH on Windows
         if: startsWith(runner.os, 'Windows')
         run: |
+          where jvm.dll
           echo "$JAVA_HOME/jre/bin/server" >> $GITHUB_PATH
           echo "$JAVA_HOME/lib/jvm" >> $GITHUB_PATH
           export LD_LIBRARY_PATH="$JAVA_HOME/jre/bin/server:${LD_LIBRARY_PATH}"
@@ -100,6 +101,7 @@ jobs:
           echo "$JAVA_HOME/bin/server" >> $GITHUB_PATH
           echo "$JAVA_HOME/jre/lib/amd64/server" >> $GITHUB_PATH
           export PATH="$JAVA_HOME/jre/lib/amd64/server:${PATH}"
+        shell: bash
 
       - name: Setup Python 3.x
         uses: actions/setup-python@v2
