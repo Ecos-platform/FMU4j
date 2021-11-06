@@ -74,9 +74,15 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest ]
+        jvm-version: [ 8, 11 ]
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set up JDK ${{matrix.jvm-version}}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{matrix.jvm-version}}
 
       - name: Setup Python 3.x
         uses: actions/setup-python@v2
@@ -88,7 +94,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: test-fmus
-          path: fmu-builder/build
+          path: fmu-builder/build/generated/
 
       - name: Download fmpy
         run: pip install fmpy
