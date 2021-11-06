@@ -90,6 +90,9 @@ jobs:
           echo "${{env.JAVA_HOME}}/jre/bin" >> $GITHUB_PATH
           echo "${{env.JAVA_HOME}}/jre/bin/server" >> $GITHUB_PATH
           echo "${{env.JAVA_HOME}}/lib/jvm" >> $GITHUB_PATH
+          echo "${{env.JAVA_HOME}}"
+          export PATH="${{env.JAVA_HOME}}/jre/bin:${PATH}"
+          export PATH="${{env.JAVA_HOME}}/jre/bin/server:${PATH}"
         shell: bash
 
       - name: Setup PATH on Linux
