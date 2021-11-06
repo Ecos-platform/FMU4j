@@ -92,4 +92,4 @@ jobs:
         run: pip install fmpy
 
       - name: Run test
-        run: python3 test/test.py
+        run: python test/test.py
