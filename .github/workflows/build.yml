@@ -84,6 +84,14 @@ jobs:
         with:
           java-version: ${{matrix.jvm-version}}
 
+      - name: Setup PATH on Windows
+        if: startsWith(runner.os, 'Windows')
+        run: export LD_LIBRARY_PATH="$JAVA_HOME/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
+
+      - name: Setup PATH on Linux
+        if: startsWith(runner.os, 'Linux')
+        run: export PATH="$JAVA_HOME/jre/bin/server:${PATH}"
+
       - name: Setup Python 3.x
         uses: actions/setup-python@v2
         with:
