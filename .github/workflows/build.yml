@@ -89,10 +89,9 @@ jobs:
         if: startsWith(runner.os, 'Windows')
         run: |
           echo "${{env.JAVA_HOME}}/bin" >> $GITHUB_PATH
-          echo "${{env.JAVA_HOME}}/jre/bin" >> $GITHUB_PATH
-          echo "${{env.JAVA_HOME}}/jre/bin/server" >> $GITHUB_PATH
+          echo "${{env.JAVA_HOME}}/server" >> $GITHUB_PATH
           ls "${{env.JAVA_HOME}}/bin"
-          ls "${{env.JAVA_HOME}}/jre"
+          ls "${{env.JAVA_HOME}}/server"
         shell: bash
 
       - name: Setup PATH on Linux
