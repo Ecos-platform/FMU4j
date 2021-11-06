@@ -30,7 +30,39 @@ jobs:
         run: ./gradlew clean build
         shell: bash
 
-      - uses: actions/upload-artifact@master
+      - uses: actions/upload-artifact@v2
         with:
           name: fmu-builder
           path: fmu-builder-app/build/libs/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: test-fmus
+          path: fmu-builder/generated
+
+  test-external:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+
+    steps:
+      - name: Setup Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+
+      - name: Download fmus
+        uses: actions/download-artifact@v1
+        with:
+          name: test-fmus
+          path: fmu-builder/build/generated
+
+      - name: Download fmpy
+        run: pip install fmpy
+
+      - name: Run test
+        run: python3 test/test.py
