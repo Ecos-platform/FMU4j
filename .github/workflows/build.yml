@@ -65,7 +65,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: test-fmus
-          path: fmu-builder/generated/
+          path: fmu-builder/build/generated/
 
   test-external:
     needs: build-linux
@@ -86,7 +86,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: test-fmus
-          path: fmu-builder/build/generated
+          path: fmu-builder/build
 
       - name: Download fmpy
         run: pip install fmpy
