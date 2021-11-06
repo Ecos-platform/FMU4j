@@ -100,4 +100,5 @@ jobs:
         run: pip install fmpy
 
       - name: Run test
-        run: python test/test.py
+        run: python test.py
+        working-directory: test
