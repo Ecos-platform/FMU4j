@@ -88,15 +88,17 @@ jobs:
         if: startsWith(runner.os, 'Windows')
         run: |
           echo "$JAVA_HOME/jre/bin/server" >> $GITHUB_PATH
-          export LD_LIBRARY_PATH="$JAVA_HOME/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
+          echo "$JAVA_HOME/lib/jvm" >> $GITHUB_PATH
+          export LD_LIBRARY_PATH="$JAVA_HOME/jre/bin/server:${LD_LIBRARY_PATH}"
         shell: bash
 
       - name: Setup PATH on Linux
         if: startsWith(runner.os, 'Linux')
         run: |
-          echo "$JAVA_HOME/jre/lib/server" >> $GITHUB_PATH
+          echo "$JAVA_HOME/lib/server" >> $GITHUB_PATH
+           echo "$JAVA_HOME/bin/server" >> $GITHUB_PATH
           echo "$JAVA_HOME/jre/lib/amd64/server" >> $GITHUB_PATH
-          export PATH="$JAVA_HOME/jre/bin/server:${PATH}"
+          export PATH="$JAVA_HOME/jre/lib/amd64/server:${PATH}"
 
       - name: Setup Python 3.x
         uses: actions/setup-python@v2
