@@ -564,15 +564,15 @@ cppfmu::UniquePtr<cppfmu::SlaveInstance> CppfmuInstantiateSlave(
     cppfmu::Memory memory,
     const cppfmu::Logger& logger)
 {
-    std::string resources(fmuResourceLocation);
+    auto resources = std::string(fmuResourceLocation);
+    auto find = resources.find("file://");
 
-    if (resources.find("file:///") != std::string::npos) {
-        resources.replace(0, 8, "");
-    } else if (resources.find("file://") != std::string::npos) {
-        resources.replace(0, 7, "");
-    } else if (resources.find("file:/") != std::string::npos) {
-        resources.replace(0, 6, "");
-    }
+    if (find != std::string::npos) {
+#ifdef _MSC_VER
+        resources.replace(find, 8, "");
+#else
+        resources.replace(find, 7, "");
+#endif
 
     JNIEnv* env;
     JavaVM* jvm;
