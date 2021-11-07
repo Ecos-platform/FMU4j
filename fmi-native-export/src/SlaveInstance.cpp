@@ -8,6 +8,7 @@
 #include <jni.h>
 #include <string>
 #include <utility>
+#include <sstream>
 
 namespace fmu4j
 {
