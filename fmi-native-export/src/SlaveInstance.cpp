@@ -36,7 +36,7 @@ SlaveInstance::SlaveInstance(
     std::ifstream t(resources_ + "/mainclass.txt");
     std::stringstream buffer;
     buffer << t.rdbuf();
-    std::cout << "buffer=" << buffer << std::endl;
+    std::cout << "buffer=" << buffer.str() << std::endl;
    }
 
     std::string classpath(resources_ + "/model.jar");
