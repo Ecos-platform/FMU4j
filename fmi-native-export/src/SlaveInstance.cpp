@@ -8,7 +8,6 @@
 #include <jni.h>
 #include <string>
 #include <utility>
-#include <sstream>
 
 namespace fmu4j
 {
@@ -32,12 +31,7 @@ SlaveInstance::SlaveInstance(
         std::getline(infile, slaveName_);
    }
 
-   {
-    std::ifstream t(resources_ + "/mainclass.txt");
-    std::stringstream buffer;
-    buffer << t.rdbuf();
-    std::cout << "buffer=" << buffer.str() << std::endl;
-   }
+   slaveName_ = "no.ntnu.ais.fmu4j.slaves.Identity";
 
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
