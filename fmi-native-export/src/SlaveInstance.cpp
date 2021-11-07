@@ -28,10 +28,13 @@ SlaveInstance::SlaveInstance(
 
    {
         std::ifstream infile(resources_ + "/mainclass.txt");
-        std::getline(infile, slaveName_);
+        if (infile.is_open()) {
+            std::getline(infile, slaveName_);
+        } else {
+            std::string msg("Unable to open file " + std::string(infile) + " for reading!");
+            throw cppfmu::FatalError(msg.c_str());
+        }
    }
-
-   slaveName_ = "no.ntnu.ais.fmu4j.slaves.Identity";
 
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
