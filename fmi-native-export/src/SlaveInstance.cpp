@@ -575,7 +575,7 @@ cppfmu::UniquePtr<cppfmu::SlaveInstance> CppfmuInstantiateSlave(
     } else if (resources.find("file://") != std::string::npos) {
         resources.replace(0, 7, "");
     } else if (resources.find("file:/") != std::string::npos) {
-        resources.replace(0, 6, "");
+        resources.replace(0, 5, "");
     }
 
     JNIEnv* env;
