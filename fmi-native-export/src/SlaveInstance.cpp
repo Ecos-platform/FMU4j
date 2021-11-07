@@ -32,6 +32,8 @@ SlaveInstance::SlaveInstance(
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
 
+    std::cout << "SlaveName=" << slaveName_ << std::endl;
+
     jclass slaveCls = FindClass(env, classLoader_, slaveName_);
     if (slaveCls == nullptr) {
         std::string msg = "[FMU4j native] Unable to find class '" + slaveName_ + "'!";
