@@ -21,10 +21,12 @@ SlaveInstance::SlaveInstance(
     JNIEnv* env,
     std::string instanceName,
     std::string resources)
-    : resources_(std::move(resources))
+    : resources_(resources)
     , instanceName_(std::move(instanceName))
 {
     env->GetJavaVM(&jvm_);
+
+    std::cout << "resources=" << resources_ << std::endl;
 
     std::ifstream infile(resources_ + "/mainclass.txt");
     std::getline(infile, slaveName_);
