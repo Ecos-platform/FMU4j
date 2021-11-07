@@ -96,6 +96,9 @@ void SlaveInstance::initialize()
         jclass slaveCls = FindClass(env, classLoader_, slaveName_);
 
         jclass mapCls = env->FindClass("java/util/HashMap");
+        if (!mapCls) {
+            throw cppfmu::FatalError("No Map class!?");
+        }
         jmethodID mapCtor = GetMethodID(env, mapCls, "<init>", "()V");
         jmethodID putId = GetMethodID(env, mapCls, "put",
             "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
