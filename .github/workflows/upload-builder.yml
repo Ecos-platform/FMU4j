@@ -1,0 +1,36 @@
+name: Build
+
+on: [ push ]
+
+jobs:
+  upload-artifact:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        jvm-version: [ 8 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up JDK ${{matrix.jvm-version}}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{matrix.jvm-version}}
+
+      - name: Build
+        run: ./gradlew shadowJar
+        shell: bash
+
+      - uses: actions/upload-artifact@v2
+        if: ${{matrix.jvm-version}} == 8
+        with:
+          name: fmu-builder
+          path: fmu-builder-app/build/libs/fmu-builder.jar
