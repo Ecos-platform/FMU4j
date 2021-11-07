@@ -30,6 +30,12 @@ jobs:
         run: ./gradlew clean buildNative build
         shell: bash
 
+      - uses: actions/upload-artifact@v2
+        if: ${{matrix.jvm-version}} == 8
+        with:
+          name: test-fmu-win
+          path: fmu-builder/build/generated/Identity.fmu
+
   build-linux:
 
     runs-on: ubuntu-latest
@@ -58,22 +64,24 @@ jobs:
         shell: bash
 
       - uses: actions/upload-artifact@v2
+        if: ${{matrix.jvm-version}} == 8
+        with:
+          name: test-fmu-linux
+          path: fmu-builder/build/generated/Identity.fmu
+
+      - uses: actions/upload-artifact@v2
+        if: ${{matrix.jvm-version}} == 8
         with:
           name: fmu-builder
           path: fmu-builder-app/build/libs/
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: test-fmu
-          path: fmu-builder/build/generated/Identity.fmu
 
-  test-external:
+  test-external-linux:
     needs: build-linux
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
         jvm-version: [ 8 ]
 
     steps:
@@ -85,8 +93,39 @@ jobs:
           java-version: ${{matrix.jvm-version}}
           distribution: 'adopt'
 
-      - name: Setup PATH on Windows
-        if: startsWith(runner.os, 'Windows')
+      - name: Download fmus
+        uses: actions/download-artifact@v2
+        with:
+          name: test-fmu-linux
+          path: fmu-builder/build/generated/
+
+      - name: Download and run FMUchecker
+        run: |
+          wget https://github.com/modelica-tools/FMUComplianceChecker/releases/download/2.0.4/FMUChecker-2.0.4-linux64.zip
+          7z x FMUChecker-2.0.4-linux64.zip && cd FMUChecker-2.0.4-linux64
+          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
+          ./fmuCheck.linux64 ../fmu-builder/build/generated/Identity.fmu
+        shell: bash
+
+
+  test-external-windows:
+    needs: build-windows
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        jvm-version: [ 8 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK ${{matrix.jvm-version}}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{matrix.jvm-version}}
+          distribution: 'adopt'
+
+      - name: Setup PATH
         run: |
           echo "${{env.JAVA_HOME}}\bin" >> $GITHUB_PATH
           echo "${{env.JAVA_HOME}}\jre\bin\server" >> $GITHUB_PATH
@@ -95,22 +134,12 @@ jobs:
       - name: Download fmus
         uses: actions/download-artifact@v2
         with:
-          name: test-fmu
+          name: test-fmu-win
           path: fmu-builder/build/generated/
 
-      - name: Download and run FMUchecker (Windows)
-        if: startsWith(runner.os, 'Windows')
+      - name: Download and run FMUchecker
         run: |
           curl --output FMUChecker-2.0.4-win64.zip --url https://github.com/modelica-tools/FMUComplianceChecker/releases/download/2.0.4/FMUChecker-2.0.4-win64.zip -L
           7z x FMUChecker-2.0.4-win64.zip && cd FMUChecker-2.0.4-win64
           ./fmuCheck.win64.exe ../fmu-builder/build/generated/Identity.fmu
-        shell: bash
-
-      - name: Download and run FMUchecker (Linux)
-        if: startsWith(runner.os, 'Linux')
-        run: |
-          wget https://github.com/modelica-tools/FMUComplianceChecker/releases/download/2.0.4/FMUChecker-2.0.4-linux64.zip
-          7z x FMUChecker-2.0.4-linux64.zip && cd FMUChecker-2.0.4-linux64
-          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
-          ./fmuCheck.linux64 ../fmu-builder/build/generated/Identity.fmu
         shell: bash
