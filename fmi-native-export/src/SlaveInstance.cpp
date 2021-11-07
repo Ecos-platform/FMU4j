@@ -574,7 +574,10 @@ cppfmu::UniquePtr<cppfmu::SlaveInstance> CppfmuInstantiateSlave(
 #ifdef _MSC_VER
     magic = 0;
 #endif
-    if (resources.find("file:///") != std::string::npos) {
+
+    if (resources.find("file:////") != std::string::npos) {
+        resources.replace(0, 9-magic, "");
+    } else if (resources.find("file:///") != std::string::npos) {
         resources.replace(0, 8-magic, "");
     } else if (resources.find("file://") != std::string::npos) {
         resources.replace(0, 7-magic, "");
