@@ -26,8 +26,21 @@ SlaveInstance::SlaveInstance(
 {
     env->GetJavaVM(&jvm_);
 
-    std::ifstream infile(resources_ + "/mainclass.txt");
-    std::getline(infile, slaveName_);
+   {
+        std::ifstream infile(resources_ + "/mainclass.txt");
+        std::getline(infile, slaveName_);
+   }
+
+   {
+       std::ifstream infile(resources_ + "/mainclass.txt");
+
+       std::string sLine;
+       while (!infile.eof()) {
+           infile >> sLine;
+           std::cout << sLine.data() << std::endl;
+
+       }
+   }
 
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
