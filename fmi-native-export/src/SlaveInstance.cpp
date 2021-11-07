@@ -36,7 +36,7 @@ SlaveInstance::SlaveInstance(
         }
    }
 
-    std::cout << "slaveName_=" slaveName_ << std::endl;
+    std::cout << "slaveName_=" << slaveName_ << std::endl;
 
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
