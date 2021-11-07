@@ -109,7 +109,7 @@ jobs:
 
 
   test-external-windows:
-    needs: build-windows
+    needs: [build-windows, test-external-linux]
     runs-on: windows-latest
     strategy:
       fail-fast: false
