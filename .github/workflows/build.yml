@@ -54,7 +54,7 @@ jobs:
           java-version: ${{matrix.jvm-version}}
 
       - name: Build
-        run: ./gradlew clean build
+        run: ./gradlew clean buildNative build
         shell: bash
 
       - uses: actions/upload-artifact@v2
