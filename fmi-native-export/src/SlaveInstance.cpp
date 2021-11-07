@@ -31,6 +31,13 @@ SlaveInstance::SlaveInstance(
         std::getline(infile, slaveName_);
    }
 
+   {
+    std::ifstream t(resources_ + "/mainclass.txt");
+    std::stringstream buffer;
+    buffer << t.rdbuf();
+    std::cout << "buffer=" << buffer << std::endl;
+   }
+
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
 
