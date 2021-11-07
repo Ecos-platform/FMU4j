@@ -573,6 +573,7 @@ cppfmu::UniquePtr<cppfmu::SlaveInstance> CppfmuInstantiateSlave(
 #else
         resources.replace(find, 7, "");
 #endif
+}
 
     JNIEnv* env;
     JavaVM* jvm;
