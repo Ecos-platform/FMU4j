@@ -92,14 +92,6 @@ jobs:
           echo "${{env.JAVA_HOME}}\jre\bin\server" >> $GITHUB_PATH
         shell: bash
 
-      - name: Setup PATH on Linux
-        if: startsWith(runner.os, 'Linux')
-        run: |
-          echo "${{env.JAVA_HOME}}/jre/lib/amd64/server" >> $GITHUB_PATH
-          echo "${{env.JAVA_HOME}}/jre/lib/amd64/server"
-          ls "${{env.JAVA_HOME}}/jre/lib/amd64/server"
-        shell: bash
-
       - name: Download fmus
         uses: actions/download-artifact@v2
         with:
