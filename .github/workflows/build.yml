@@ -75,39 +75,6 @@ jobs:
           name: fmu-builder
           path: fmu-builder-app/build/libs/
 
-
-  test-external-linux:
-    needs: build-linux
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        jvm-version: [ 8 ]
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up JDK ${{matrix.jvm-version}}
-        uses: actions/setup-java@v2
-        with:
-          java-version: ${{matrix.jvm-version}}
-          distribution: 'adopt'
-
-      - name: Download fmus
-        uses: actions/download-artifact@v2
-        with:
-          name: test-fmu-linux
-          path: fmu-builder/build/generated/
-
-      - name: Download and run FMUchecker
-        run: |
-          wget https://github.com/modelica-tools/FMUComplianceChecker/releases/download/2.0.4/FMUChecker-2.0.4-linux64.zip
-          7z x FMUChecker-2.0.4-linux64.zip && cd FMUChecker-2.0.4-linux64
-          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
-          ./fmuCheck.linux64 ../fmu-builder/build/generated/Identity.fmu
-        shell: bash
-
-
   test-external-windows:
     needs: build-windows
     runs-on: windows-latest
@@ -142,4 +109,35 @@ jobs:
           curl --output FMUChecker-2.0.4-win64.zip --url https://github.com/modelica-tools/FMUComplianceChecker/releases/download/2.0.4/FMUChecker-2.0.4-win64.zip -L
           7z x FMUChecker-2.0.4-win64.zip && cd FMUChecker-2.0.4-win64
           ./fmuCheck.win64.exe ../fmu-builder/build/generated/Identity.fmu
+        shell: bash
+
+  test-external-linux:
+    needs: [build-linux, test-external-windows]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        jvm-version: [ 8 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK ${{matrix.jvm-version}}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{matrix.jvm-version}}
+          distribution: 'adopt'
+
+      - name: Download fmus
+        uses: actions/download-artifact@v2
+        with:
+          name: test-fmu-linux
+          path: fmu-builder/build/generated/
+
+      - name: Download and run FMUchecker
+        run: |
+          wget https://github.com/modelica-tools/FMUComplianceChecker/releases/download/2.0.4/FMUChecker-2.0.4-linux64.zip
+          7z x FMUChecker-2.0.4-linux64.zip && cd FMUChecker-2.0.4-linux64
+          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
+          ./fmuCheck.linux64 ../fmu-builder/build/generated/Identity.fmu
         shell: bash

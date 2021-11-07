@@ -36,7 +36,7 @@ SlaveInstance::SlaveInstance(
         }
    }
 
-    std::cout << "1:slaveName_=" << slaveName_ << std::endl;
+   std::cout << "resources_" << resources_ << std::endl;
 
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
@@ -93,7 +93,6 @@ void SlaveInstance::initialize()
     jvm_invoke(jvm_, [this](JNIEnv* env) {
         env->DeleteGlobalRef(slaveInstance_);
 
-        std::cout << "2:slaveName_=" << slaveName_ << std::endl;
         jclass slaveCls = FindClass(env, classLoader_, slaveName_);
 
         jclass mapCls = env->FindClass("java/util/HashMap");
