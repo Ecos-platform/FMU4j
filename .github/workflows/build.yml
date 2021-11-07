@@ -3,32 +3,32 @@ name: Build
 on: [ push ]
 
 jobs:
-  build-windows:
-
-    runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        jvm-version: [ 8, 11 ]
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Set up JDK ${{matrix.jvm-version}}
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{matrix.jvm-version}}
-
-      - name: Build
-        run: ./gradlew clean build
-        shell: bash
+#  build-windows:
+#
+#    runs-on: windows-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        jvm-version: [ 8, 11 ]
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - uses: actions/cache@v2
+#        with:
+#          path: ~/.gradle/caches
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-
+#
+#      - name: Set up JDK ${{matrix.jvm-version}}
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: ${{matrix.jvm-version}}
+#
+#      - name: Build
+#        run: ./gradlew clean build
+#        shell: bash
 
   build-linux:
 
@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jvm-version: [ 8, 11 ]
+        jvm-version: [ 8 ]
 
     steps:
       - uses: actions/checkout@v2
@@ -73,8 +73,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
-        jvm-version: [ 8, 11 ]
+        os: [ windows-latest ]
+        jvm-version: [ 8 ]
 
     steps:
       - uses: actions/checkout@v2
@@ -88,12 +88,15 @@ jobs:
       - name: Setup PATH on Windows
         if: startsWith(runner.os, 'Windows')
         run: |
+          echo "${{env.JAVA_HOME}}" >> $GITHUB_PATH
           echo "${{env.JAVA_HOME}}\bin" >> $GITHUB_PATH
           echo "${{env.JAVA_HOME}}\bin\server" >> $GITHUB_PATH
+          echo "${{env.JAVA_HOME}}"
+          ls "${{env.JAVA_HOME}}"
           echo "${{env.JAVA_HOME}}\bin"
           ls "${{env.JAVA_HOME}}\bin"
-          echo "${{env.JAVA_HOME}}\bin\server"
-          ls "${{env.JAVA_HOME}}\bin\server"
+          echo "${{env.JAVA_HOME}}\jvm"
+          ls "${{env.JAVA_HOME}}\jvm"
         shell: bash
 
       - name: Setup PATH on Linux
