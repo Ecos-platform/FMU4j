@@ -27,6 +27,14 @@ SlaveInstance::SlaveInstance(
     env->GetJavaVM(&jvm_);
 
    {
+        // check if main class excist
+        {
+            std::ifstream f(resources_ + "/mainclass.txt");
+            if (!f.good())
+            {
+                resources_ = "/" + resources_;
+            }
+        }
         std::ifstream infile(resources_ + "/mainclass.txt");
         if (infile.is_open()) {
             std::getline(infile, slaveName_);
@@ -569,13 +577,11 @@ cppfmu::UniquePtr<cppfmu::SlaveInstance> CppfmuInstantiateSlave(
     const cppfmu::Logger& logger)
 {
     std::string resources(fmuResourceLocation);
-    std::cout << "instanceName " << instanceName <<  std::endl;
+    std::cout << "fmuResourceLocation " << fmuResourceLocation <<  std::endl;
     std::cout << "resources " << resources <<  std::endl;
 
-    if (resources.find("file:////") != std::string::npos) {
+    if (resources.find("file:///") != std::string::npos) {
         resources.replace(0, 8, "");
-    } else if  (resources.find("file:///") != std::string::npos) {
-        resources.replace(0, 7, "");
     } else if (resources.find("file://") != std::string::npos) {
         resources.replace(0, 7, "");
     } else if (resources.find("file:/") != std::string::npos) {

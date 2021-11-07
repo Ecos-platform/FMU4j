@@ -61,7 +61,7 @@ private:
     jobject slaveInstance_{};
 
     std::string slaveName_;
-    const std::string resources_;
+    std::string resources_;
     const std::string instanceName_;
 
     jmethodID ctorId_;
