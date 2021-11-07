@@ -21,12 +21,10 @@ SlaveInstance::SlaveInstance(
     JNIEnv* env,
     std::string instanceName,
     std::string resources)
-    : resources_(resources)
+    : resources_(std::move(resources))
     , instanceName_(std::move(instanceName))
 {
     env->GetJavaVM(&jvm_);
-
-    std::cout << "resources=" << resources_ << std::endl;
 
     std::ifstream infile(resources_ + "/mainclass.txt");
     std::getline(infile, slaveName_);
@@ -34,7 +32,8 @@ SlaveInstance::SlaveInstance(
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
 
-    std::cout << "SlaveName=" << slaveName_ << std::endl;
+    std::cout << "resources_=" << resources_ << std::endl;
+    std::cout << "slaveName_=" << slaveName_ << std::endl;
 
     jclass slaveCls = FindClass(env, classLoader_, slaveName_);
     if (slaveCls == nullptr) {
