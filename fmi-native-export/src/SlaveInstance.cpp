@@ -568,7 +568,7 @@ cppfmu::UniquePtr<cppfmu::SlaveInstance> CppfmuInstantiateSlave(
     cppfmu::Memory memory,
     const cppfmu::Logger& logger)
 {
-    std::cout << "resourceLocation=" << fmuResourceLocation
+    std::cout << "resourceLocation=" << fmuResourceLocation << std::endl;
 
     auto resources = std::string(fmuResourceLocation);
     auto find = resources.find("file://");
