@@ -26,8 +26,15 @@ SlaveInstance::SlaveInstance(
 {
     env->GetJavaVM(&jvm_);
 
-    std::ifstream infile(resources_ + "/mainclass.txt");
-    std::getline(infile, slaveName_);
+   {
+        std::ifstream infile(resources_ + "/mainclass.txt");
+        if (infile.is_open()) {
+            std::getline(infile, slaveName_);
+        } else {
+            std::string msg("Unable to open file " + resources_ + "/mainclass.txt for reading!");
+            throw cppfmu::FatalError(msg.c_str());
+        }
+   }
 
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
@@ -563,12 +570,19 @@ cppfmu::UniquePtr<cppfmu::SlaveInstance> CppfmuInstantiateSlave(
 {
     std::string resources(fmuResourceLocation);
 
-    if (resources.find("file:///") != std::string::npos) {
-        resources.replace(0, 8, "");
+    int magic = 1;
+#ifdef _MSC_VER
+    magic = 0;
+#endif
+
+    if (resources.find("file:////") != std::string::npos) {
+        resources.replace(0, 9-magic, "");
+    } else if (resources.find("file:///") != std::string::npos) {
+        resources.replace(0, 8-magic, "");
     } else if (resources.find("file://") != std::string::npos) {
-        resources.replace(0, 7, "");
+        resources.replace(0, 7-magic, "");
     } else if (resources.find("file:/") != std::string::npos) {
-        resources.replace(0, 6, "");
+        resources.replace(0, 6-magic, "");
     }
 
     JNIEnv* env;

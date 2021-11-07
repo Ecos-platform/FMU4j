@@ -98,7 +98,7 @@ class FmuBuilder(
             }
 
             zos.putNextEntry(ZipEntry("resources/mainclass.txt"))
-            zos.write(mainClass.toByteArray())
+            zos.write(mainClass.toByteArray() + System.lineSeparator().toByteArray())
             zos.closeEntry()
 
             zos.closeEntry() //resources

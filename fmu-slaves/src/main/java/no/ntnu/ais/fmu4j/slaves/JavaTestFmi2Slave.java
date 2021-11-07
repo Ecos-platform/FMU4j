@@ -20,7 +20,7 @@ public class JavaTestFmi2Slave extends Fmi2Slave {
 
     @ScalarVariable(causality = Fmi2Causality.output)
     protected double realOut = 2.0;
-    @ScalarVariable(causality = Fmi2Causality.parameter)
+    @ScalarVariable(causality = Fmi2Causality.parameter, variability = Fmi2Variability.fixed)
     protected double param = 1.0;
     @ScalarVariable(causality = Fmi2Causality.output)
     protected int intOut = 1;
