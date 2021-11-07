@@ -95,14 +95,9 @@ jobs:
       - name: Setup PATH on Linux
         if: startsWith(runner.os, 'Linux')
         run: |
-          echo "${{env.JAVA_HOME}}/lib/server" >> $GITHUB_PATH
           echo "${{env.JAVA_HOME}}/jre/lib/amd64/server" >> $GITHUB_PATH
-          echo "${{env.JAVA_HOME}}/lib/server"
-          ls "${{env.JAVA_HOME}}/lib/server"
           echo "${{env.JAVA_HOME}}/jre/lib/amd64/server"
           ls "${{env.JAVA_HOME}}/jre/lib/amd64/server"
-          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
-          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/lib/server:${LD_LIBRARY_PATH}"
         shell: bash
 
       - name: Download fmus
@@ -124,5 +119,6 @@ jobs:
         run: |
           wget https://github.com/modelica-tools/FMUComplianceChecker/releases/download/2.0.4/FMUChecker-2.0.4-linux64.zip
           7z x FMUChecker-2.0.4-linux64.zip && cd FMUChecker-2.0.4-linux64
+          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
           ./fmuCheck.linux64 ../fmu-builder/build/generated/Identity.fmu
         shell: bash
