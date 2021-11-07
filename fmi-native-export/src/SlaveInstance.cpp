@@ -31,7 +31,7 @@ SlaveInstance::SlaveInstance(
         if (infile.is_open()) {
             std::getline(infile, slaveName_);
         } else {
-            std::string msg("Unable to open file " + std::string(infile) + " for reading!");
+            std::string msg("Unable to open file " + resources_ + "/mainclass.txt for reading!");
             throw cppfmu::FatalError(msg.c_str());
         }
    }
