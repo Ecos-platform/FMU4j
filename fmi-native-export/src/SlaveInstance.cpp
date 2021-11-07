@@ -32,7 +32,6 @@ SlaveInstance::SlaveInstance(
     std::string classpath(resources_ + "/model.jar");
     classLoader_ = env->NewGlobalRef(create_classloader(env, classpath));
 
-    std::cout << "resources_=" << resources_ << std::endl;
     std::cout << "slaveName_=" << slaveName_ << std::endl;
 
     jclass slaveCls = FindClass(env, classLoader_, slaveName_);
@@ -564,16 +563,15 @@ cppfmu::UniquePtr<cppfmu::SlaveInstance> CppfmuInstantiateSlave(
     cppfmu::Memory memory,
     const cppfmu::Logger& logger)
 {
-    auto resources = std::string(fmuResourceLocation);
-    auto find = resources.find("file://");
+    std::string resources(fmuResourceLocation);
 
-    if (find != std::string::npos) {
-#ifdef _MSC_VER
-        resources.replace(find, 8, "");
-#else
-        resources.replace(find, 7, "");
-#endif
-}
+    if (resources.find("file:///") != std::string::npos) {
+        resources.replace(0, 8, "");
+    } else if (resources.find("file://") != std::string::npos) {
+        resources.replace(0, 7, "");
+    } else if (resources.find("file:/") != std::string::npos) {
+        resources.replace(0, 6, "");
+    }
 
     JNIEnv* env;
     JavaVM* jvm;
