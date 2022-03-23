@@ -32,7 +32,7 @@ internal class TestBuilder {
                 "-m", "$group.JavaTestFmi2Slave",
                 "-f", jar,
                 "-d", dest,
-                "-r", testFile.absolutePath
+                "-r", testFile.absolutePath.replace("%20", " ")
             )
         )
 
@@ -214,7 +214,7 @@ internal class TestBuilder {
     }
 
     @Test
-    fun testParallelInstantiate() {
+    fun testMultipleInstantiate() {
 
         FmuBuilder.main(
             arrayOf(
@@ -228,7 +228,7 @@ internal class TestBuilder {
         Assertions.assertTrue(fmuFile.exists())
 
         Fmu.from(fmuFile).asCoSimulationFmu().use { fmu ->
-            (0..10).toList().parallelStream().forEach {
+            (0..10).toList().stream().forEach {
                 fmu.newInstance().use { slave ->
                     slave.simpleSetup()
                 }

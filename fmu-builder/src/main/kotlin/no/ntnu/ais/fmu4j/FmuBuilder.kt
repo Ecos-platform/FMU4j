@@ -149,10 +149,11 @@ class FmuBuilder(
         var destFile: File? = null
 
         @CommandLine.Option(names = ["-r", "--res"], arity = "0..*", description = ["resources."], required = false)
-        var resources: Array<File>? = null
+        var resources: Array<String>? = null
 
         override fun run() {
-            FmuBuilder(mainClass, jarFile, resources).build(destFile)
+            val resourceFiles = resources?.map { File(it.replace("20%", " ")) }
+            FmuBuilder(mainClass, jarFile, resourceFiles?.toTypedArray()).build(destFile)
         }
 
     }
