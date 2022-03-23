@@ -1,6 +1,6 @@
-name: Build
+name: Test Linux
 
-on: [ push ]
+on: [ push, workflow_dispatch ]
 
 jobs:
 
