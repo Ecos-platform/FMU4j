@@ -1,7 +1,7 @@
 ### FMU4j
 
 FMU4j is a software package for the JVM that enables
-export of models compatiable with FMI 2.0 for Co-simulation.
+export of models compatible with FMI 2.0 for Co-simulation.
 
 Get started using [this](https://github.com/Vico-platform/fmu4j_template) template repository.
 
