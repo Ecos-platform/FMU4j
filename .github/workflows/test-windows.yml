@@ -35,7 +35,7 @@ jobs:
           name: test-fmu-win
           path: fmu-builder/build/generated/Identity.fmu
 
-  FMUchecker-windows:
+  check-windows:
     needs: [build-windows]
     runs-on: windows-latest
     strategy:
@@ -83,8 +83,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Python ${{matrix.python-version}}
-        uses: actions/setup-python@v3
+      - uses: actions/setup-python@v3
         with:
           python-version: ${{matrix.python-version}}
 
