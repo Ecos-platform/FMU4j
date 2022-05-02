@@ -36,7 +36,7 @@ jobs:
           name: test-fmu-linux
           path: fmu-builder/build/generated/Identity.fmu
 
-  test-external-linux:
+  FMUchecker-linux:
     needs: [build-linux]
     runs-on: ubuntu-latest
     strategy:
@@ -53,7 +53,7 @@ jobs:
           java-version: ${{matrix.jvm-version}}
           distribution: 'adopt'
 
-      - name: Download fmus
+      - name: Download FMUs
         uses: actions/download-artifact@v2
         with:
           name: test-fmu-linux
@@ -66,3 +66,47 @@ jobs:
           export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
           ./fmuCheck.linux64 ../fmu-builder/build/generated/Identity.fmu
         shell: bash
+
+  fmpy-linux:
+    needs: [ build-windows ]
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        jvm-version: [ 8 ]
+        python-version: [ 3.7, 3.8, 3.9 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python ${{matrix.python-version}}
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{matrix.python-version}}
+
+      - name: Set up JDK ${{matrix.jvm-version}}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{matrix.jvm-version}}
+          distribution: 'adopt'
+
+      - name: Setup PATH
+        run: |
+          echo "${{env.JAVA_HOME}}\bin" >> $GITHUB_PATH
+          echo "${{env.JAVA_HOME}}\jre\bin\server" >> $GITHUB_PATH
+        shell: bash
+
+      - name: Download FMUs
+        uses: actions/download-artifact@v2
+        with:
+          name: test-fmu-win
+          path: fmu-builder/build/generated/
+
+      - name: Install FMPy
+        run: |
+          pip install fmpy
+
+      - name: Test FMPy
+        run: |
+          cd verification
+          python fmpy_test.py
