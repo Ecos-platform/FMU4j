@@ -21,9 +21,10 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Set up JDK ${{matrix.jvm-version}}
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: ${{matrix.jvm-version}}
+          distribution: 'adopt'
 
       - name: Build
         run: ./gradlew clean buildNative build
@@ -35,13 +36,13 @@ jobs:
           name: test-fmu-win
           path: fmu-builder/build/generated/Identity.fmu
 
-  test-external-windows:
+  check-windows:
     needs: [build-windows]
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        jvm-version: [ 8 ]
+        jvm-version: [ 8, 11 ]
 
     steps:
       - uses: actions/checkout@v2
@@ -55,6 +56,7 @@ jobs:
       - name: Setup PATH
         run: |
           echo "${{env.JAVA_HOME}}\bin" >> $GITHUB_PATH
+          echo "${{env.JAVA_HOME}}\bin\server" >> $GITHUB_PATH
           echo "${{env.JAVA_HOME}}\jre\bin\server" >> $GITHUB_PATH
         shell: bash
 
@@ -70,3 +72,48 @@ jobs:
           7z x FMUChecker-2.0.4-win64.zip && cd FMUChecker-2.0.4-win64
           ./fmuCheck.win64.exe ../fmu-builder/build/generated/Identity.fmu
         shell: bash
+
+  fmpy-windows:
+    needs: [ build-windows ]
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        jvm-version: [ 8, 11 ]
+        python-version: [ 3.7 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python ${{matrix.python-version}}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{matrix.python-version}}
+
+      - name: Set up JDK ${{matrix.jvm-version}}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{matrix.jvm-version}}
+          distribution: 'adopt'
+
+      - name: Setup PATH
+        run: |
+          echo "${{env.JAVA_HOME}}\bin" >> $GITHUB_PATH
+          echo "${{env.JAVA_HOME}}\bin\server" >> $GITHUB_PATH
+          echo "${{env.JAVA_HOME}}\jre\bin\server" >> $GITHUB_PATH
+        shell: bash
+
+      - name: Download FMUs
+        uses: actions/download-artifact@v2
+        with:
+          name: test-fmu-win
+          path: fmu-builder/build/generated/
+
+      - name: Install FMPy
+        run: |
+          pip install fmpy
+
+      - name: Test FMPy
+        run: |
+          cd verification
+          python fmpy_test.py

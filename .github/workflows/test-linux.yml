@@ -36,13 +36,13 @@ jobs:
           name: test-fmu-linux
           path: fmu-builder/build/generated/Identity.fmu
 
-  test-external-linux:
+  check-linux:
     needs: [build-linux]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        jvm-version: [ 8 ]
+        jvm-version: [ 8, 11 ]
 
     steps:
       - uses: actions/checkout@v2
@@ -53,7 +53,7 @@ jobs:
           java-version: ${{matrix.jvm-version}}
           distribution: 'adopt'
 
-      - name: Download fmus
+      - name: Download FMUs
         uses: actions/download-artifact@v2
         with:
           name: test-fmu-linux
@@ -63,6 +63,47 @@ jobs:
         run: |
           wget https://github.com/modelica-tools/FMUComplianceChecker/releases/download/2.0.4/FMUChecker-2.0.4-linux64.zip
           7z x FMUChecker-2.0.4-linux64.zip && cd FMUChecker-2.0.4-linux64
+          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/lib/server:${LD_LIBRARY_PATH}"
           export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
           ./fmuCheck.linux64 ../fmu-builder/build/generated/Identity.fmu
         shell: bash
+
+  fmpy-linux:
+    needs: [ build-linux ]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        jvm-version: [ 8, 11 ]
+        python-version: [ 3.7, 3.8, 3.9 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python ${{matrix.python-version}}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{matrix.python-version}}
+
+      - name: Set up JDK ${{matrix.jvm-version}}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{matrix.jvm-version}}
+          distribution: 'adopt'
+
+      - name: Download FMUs
+        uses: actions/download-artifact@v2
+        with:
+          name: test-fmu-linux
+          path: fmu-builder/build/generated/
+
+      - name: Install FMPy
+        run: |
+          pip install fmpy
+
+      - name: Test FMPy
+        run: |
+          cd verification
+          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/lib/server:${LD_LIBRARY_PATH}"
+          export LD_LIBRARY_PATH="${{env.JAVA_HOME}}/jre/lib/amd64/server:${LD_LIBRARY_PATH}"
+          python fmpy_test.py
