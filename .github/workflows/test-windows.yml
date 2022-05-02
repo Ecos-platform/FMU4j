@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jvm-version: [ 8 ]
+        jvm-version: [ 8, 11 ]
 
     steps:
       - uses: actions/checkout@v2
