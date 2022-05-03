@@ -3,6 +3,11 @@
 FMU4j is a software package for the JVM that enables
 export of models compatible with FMI 2.0 for Co-simulation.
 
+Linux and Windows are supported.
+
+Note that Python 3.7 < is known to cause issues on Windows. 
+FMUs might not work in that environment.
+
 Get started using [this](https://github.com/Vico-platform/fmu4j_template) template repository.
 
 #### JFrog artifactory
